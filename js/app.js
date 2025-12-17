@@ -55,16 +55,26 @@ const App = {
      */
     async populateLoginUsers() {
         const userSelect = Utils.$('#user-select');
-        if (!userSelect) return;
+        if (!userSelect) {
+            console.error('User select element not found');
+            return;
+        }
+
+        console.log('Populating users, API URL:', CONFIG.API_BASE_URL);
 
         // DEMO MODE - use demo users
         if (CONFIG.API_BASE_URL.includes('your-n8n-instance')) {
-            Object.entries(Auth.DEMO_USERS).forEach(([username, user]) => {
-                const option = document.createElement('option');
-                option.value = username;
-                option.textContent = user.name;
-                userSelect.appendChild(option);
-            });
+            console.log('Demo mode active, users:', Auth.DEMO_USERS);
+            if (Auth.DEMO_USERS) {
+                Object.entries(Auth.DEMO_USERS).forEach(([username, user]) => {
+                    const option = document.createElement('option');
+                    option.value = username;
+                    option.textContent = user.name;
+                    userSelect.appendChild(option);
+                });
+            } else {
+                console.error('Auth.DEMO_USERS is not defined');
+            }
             return;
         }
 
