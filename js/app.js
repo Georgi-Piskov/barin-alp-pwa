@@ -197,20 +197,17 @@ const App = {
      * Handle logout
      */
     async handleLogout() {
-        console.log('Logout clicked');
         try {
             const confirmed = await Components.modal.confirm(
-                'Sigurni li ste, che iskate da izlezete?',
-                { title: 'Izhod' }
+                '\u0421\u0438\u0433\u0443\u0440\u043D\u0438 \u043B\u0438 \u0441\u0442\u0435, \u0447\u0435 \u0438\u0441\u043A\u0430\u0442\u0435 \u0434\u0430 \u0438\u0437\u043B\u0435\u0437\u0435\u0442\u0435?',
+                { title: '\u0418\u0437\u0445\u043E\u0434' }
             );
-            
-            console.log('Confirmed:', confirmed);
             
             if (confirmed) {
                 await Auth.logout();
                 this.clearCache();
                 this.showLogin();
-                Components.toast.info('Izlyazohte ot sistemata');
+                Components.toast.info('\u0418\u0437\u043B\u044F\u0437\u043E\u0445\u0442\u0435 \u043E\u0442 \u0441\u0438\u0441\u0442\u0435\u043C\u0430\u0442\u0430');
             }
         } catch (error) {
             console.error('Logout error:', error);
@@ -319,18 +316,18 @@ const App = {
         
         // Update header title
         const titles = {
-            'dashboard': 'Inicio',
-            'new-expense': 'Nov razhod',
-            'invoices': 'Fakturi',
-            'inventory': 'Inventar',
-            'admin-overview': 'Pregled',
-            'technicians': 'Tehnici',
-            'bank-upload': 'Bank izvlechenie',
-            'objects': 'Obekti'
+            'dashboard': '\u0422\u0430\u0431\u043B\u043E',
+            'new-expense': '\u041D\u043E\u0432 \u0440\u0430\u0437\u0445\u043E\u0434',
+            'invoices': '\u0424\u0430\u043A\u0442\u0443\u0440\u0438',
+            'inventory': '\u0418\u043D\u0432\u0435\u043D\u0442\u0430\u0440',
+            'admin-overview': '\u041E\u0431\u0449 \u043F\u0440\u0435\u0433\u043B\u0435\u0434',
+            'technicians': '\u0422\u0435\u0445\u043D\u0438\u0446\u0438',
+            'bank-upload': '\u0411\u0430\u043D\u043A\u043E\u0432\u043E \u0438\u0437\u0432\u043B\u0435\u0447\u0435\u043D\u0438\u0435',
+            'objects': '\u041E\u0431\u0435\u043A\u0442\u0438'
         };
         const headerTitle = Utils.$('.header-title');
         if (headerTitle) {
-            headerTitle.textContent = titles[pageName] || 'BARIN ALP';
+            headerTitle.textContent = titles[pageName] || '\u0411\u0410\u0420\u0418\u041D \u0410\u041B\u041F';
         }
     },
 

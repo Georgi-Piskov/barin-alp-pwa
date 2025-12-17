@@ -32,11 +32,11 @@ const Auth = {
 
     // Demo users for testing (remove in production)
     DEMO_USERS: {
-        'director1': { id: 1, username: 'director1', name: 'Georgi Direktor', role: 'director', pin: '1234' },
-        'director2': { id: 2, username: 'director2', name: 'Ivan Direktor', role: 'director', pin: '1234' },
-        'tech1': { id: 3, username: 'tech1', name: 'Petar Tehnik', role: 'technician', pin: '1234' },
-        'tech2': { id: 4, username: 'tech2', name: 'Stoyan Tehnik', role: 'technician', pin: '1234' },
-        'tech3': { id: 5, username: 'tech3', name: 'Dimitar Tehnik', role: 'technician', pin: '1234' }
+        'director1': { id: 1, username: 'director1', name: '\u0413\u0435\u043E\u0440\u0433\u0438 \u0414\u0438\u0440\u0435\u043A\u0442\u043E\u0440', role: 'director', pin: '1234' },
+        'director2': { id: 2, username: 'director2', name: '\u0418\u0432\u0430\u043D \u0414\u0438\u0440\u0435\u043A\u0442\u043E\u0440', role: 'director', pin: '1234' },
+        'tech1': { id: 3, username: 'tech1', name: '\u041F\u0435\u0442\u044A\u0440 \u0422\u0435\u0445\u043D\u0438\u043A', role: 'technician', pin: '1234' },
+        'tech2': { id: 4, username: 'tech2', name: '\u0421\u0442\u043E\u044F\u043D \u0422\u0435\u0445\u043D\u0438\u043A', role: 'technician', pin: '1234' },
+        'tech3': { id: 5, username: 'tech3', name: '\u0414\u0438\u043C\u0438\u0442\u044A\u0440 \u0422\u0435\u0445\u043D\u0438\u043A', role: 'technician', pin: '1234' }
     },
 
     /**

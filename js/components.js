@@ -141,13 +141,13 @@ const Components = {
         /**
          * Close modal
          */
-        close() {
+        close(skipCallback = false) {
             if (!this.container) return;
 
             this.container.classList.remove('open');
             document.body.style.overflow = '';
 
-            if (this.currentModal?.onClose) {
+            if (!skipCallback && this.currentModal?.onClose) {
                 this.currentModal.onClose();
             }
             this.currentModal = null;
@@ -168,12 +168,11 @@ const Components = {
          * @returns {Promise<boolean>}
          */
         confirm(message, options = {}) {
-            console.log('Modal confirm called:', message);
             return new Promise((resolve) => {
                 const {
-                    title = 'Potvarzhdenie',
-                    confirmText = 'Da',
-                    cancelText = 'Ne',
+                    title = '\u041F\u043E\u0442\u0432\u044A\u0440\u0436\u0434\u0435\u043D\u0438\u0435',
+                    confirmText = '\u0414\u0430',
+                    cancelText = '\u041D\u0435',
                     confirmClass = 'btn-primary'
                 } = options;
 
@@ -184,20 +183,17 @@ const Components = {
                         <button type="button" class="btn btn-secondary" data-action="cancel">${cancelText}</button>
                         <button type="button" class="btn ${confirmClass}" data-action="confirm">${confirmText}</button>
                     `,
-                    onClose: () => resolve(false)
+                    closeable: false
                 });
-                
-                console.log('Modal container:', this.container);
 
                 // Button handlers
                 const modal = this.container.querySelector('.modal');
-                console.log('Modal element:', modal);
                 modal.querySelector('[data-action="cancel"]').addEventListener('click', () => {
-                    this.close();
+                    this.close(true);
                     resolve(false);
                 });
                 modal.querySelector('[data-action="confirm"]').addEventListener('click', () => {
-                    this.close();
+                    this.close(true);
                     resolve(true);
                 });
             });
