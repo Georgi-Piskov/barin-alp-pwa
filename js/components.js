@@ -168,11 +168,12 @@ const Components = {
          * @returns {Promise<boolean>}
          */
         confirm(message, options = {}) {
+            console.log('Modal confirm called:', message);
             return new Promise((resolve) => {
                 const {
-                    title = 'Потвърждение',
-                    confirmText = 'Да',
-                    cancelText = 'Не',
+                    title = 'Potvarzhdenie',
+                    confirmText = 'Da',
+                    cancelText = 'Ne',
                     confirmClass = 'btn-primary'
                 } = options;
 
@@ -185,9 +186,12 @@ const Components = {
                     `,
                     onClose: () => resolve(false)
                 });
+                
+                console.log('Modal container:', this.container);
 
                 // Button handlers
                 const modal = this.container.querySelector('.modal');
+                console.log('Modal element:', modal);
                 modal.querySelector('[data-action="cancel"]').addEventListener('click', () => {
                     this.close();
                     resolve(false);

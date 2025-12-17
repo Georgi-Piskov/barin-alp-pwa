@@ -197,16 +197,23 @@ const App = {
      * Handle logout
      */
     async handleLogout() {
-        const confirmed = await Components.modal.confirm(
-            'Сигурни ли сте, че искате да излезете?',
-            { title: 'Изход' }
-        );
-        
-        if (confirmed) {
-            await Auth.logout();
-            this.clearCache();
-            this.showLogin();
-            Components.toast.info('Излязохте от системата');
+        console.log('Logout clicked');
+        try {
+            const confirmed = await Components.modal.confirm(
+                'Sigurni li ste, che iskate da izlezete?',
+                { title: 'Izhod' }
+            );
+            
+            console.log('Confirmed:', confirmed);
+            
+            if (confirmed) {
+                await Auth.logout();
+                this.clearCache();
+                this.showLogin();
+                Components.toast.info('Izlyazohte ot sistemata');
+            }
+        } catch (error) {
+            console.error('Logout error:', error);
         }
     },
 
