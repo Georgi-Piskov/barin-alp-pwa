@@ -32,11 +32,11 @@ const Auth = {
 
     // Demo users for testing (remove in production)
     DEMO_USERS: {
-        'director1': { id: 1, username: 'director1', name: 'Георги Директор', role: 'director', pin: '1234' },
-        'director2': { id: 2, username: 'director2', name: 'Иван Директор', role: 'director', pin: '1234' },
-        'tech1': { id: 3, username: 'tech1', name: 'Петър Техник', role: 'technician', pin: '1234' },
-        'tech2': { id: 4, username: 'tech2', name: 'Стоян Техник', role: 'technician', pin: '1234' },
-        'tech3': { id: 5, username: 'tech3', name: 'Димитър Техник', role: 'technician', pin: '1234' }
+        'director1': { id: 1, username: 'director1', name: 'Georgi Direktor', role: 'director', pin: '1234' },
+        'director2': { id: 2, username: 'director2', name: 'Ivan Direktor', role: 'director', pin: '1234' },
+        'tech1': { id: 3, username: 'tech1', name: 'Petar Tehnik', role: 'technician', pin: '1234' },
+        'tech2': { id: 4, username: 'tech2', name: 'Stoyan Tehnik', role: 'technician', pin: '1234' },
+        'tech3': { id: 5, username: 'tech3', name: 'Dimitar Tehnik', role: 'technician', pin: '1234' }
     },
 
     /**

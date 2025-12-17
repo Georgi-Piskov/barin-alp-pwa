@@ -6,19 +6,19 @@
 const DEMO_DATA = {
     // Users
     users: [
-        { id: 1, username: 'director1', name: 'Георги Директор', role: 'director', balance: 0 },
-        { id: 2, username: 'director2', name: 'Иван Директор', role: 'director', balance: 0 },
-        { id: 3, username: 'tech1', name: 'Петър Техник', role: 'technician', balance: 2500.00 },
-        { id: 4, username: 'tech2', name: 'Стоян Техник', role: 'technician', balance: 1800.50 },
-        { id: 5, username: 'tech3', name: 'Димитър Техник', role: 'technician', balance: 3200.00 }
+        { id: 1, username: 'director1', name: 'Georgi Direktor', role: 'director', balance: 0 },
+        { id: 2, username: 'director2', name: 'Ivan Direktor', role: 'director', balance: 0 },
+        { id: 3, username: 'tech1', name: 'Petar Tehnik', role: 'technician', balance: 2500.00 },
+        { id: 4, username: 'tech2', name: 'Stoyan Tehnik', role: 'technician', balance: 1800.50 },
+        { id: 5, username: 'tech3', name: 'Dimitar Tehnik', role: 'technician', balance: 3200.00 }
     ],
 
     // Objects (Construction Sites)
     objects: [
-        { id: 1, name: 'Обект Витоша', address: 'бул. Витошка 100', status: 'active', totalExpenses: 15000 },
-        { id: 2, name: 'Обект Люлин', address: 'ж.к. Люлин бл. 205', status: 'active', totalExpenses: 8500 },
-        { id: 3, name: 'Обект Младост', address: 'ж.к. Младост 4', status: 'active', totalExpenses: 12300 },
-        { id: 4, name: 'Обект Център', address: 'ул. Граф Игнатиев 45', status: 'completed', totalExpenses: 45000 }
+        { id: 1, name: 'Obekt Vitosha', address: 'bul. Vitoshka 100', status: 'active', totalExpenses: 15000 },
+        { id: 2, name: 'Obekt Lyulin', address: 'zh.k. Lyulin bl. 205', status: 'active', totalExpenses: 8500 },
+        { id: 3, name: 'Obekt Mladost', address: 'zh.k. Mladost 4', status: 'active', totalExpenses: 12300 },
+        { id: 4, name: 'Obekt Centar', address: 'ul. Graf Ignatiev 45', status: 'completed', totalExpenses: 45000 }
     ],
 
     // Invoices
@@ -26,38 +26,38 @@ const DEMO_DATA = {
         { 
             id: 1, 
             date: '2025-12-15', 
-            supplier: 'Стройко ЕООД', 
+            supplier: 'Stroyko EOOD', 
             invoiceNumber: 'INV-001',
             total: 1250.00,
-            description: 'Строителни материали',
+            description: 'Stroitelni materiali',
             createdBy: 3,
-            createdByName: 'Петър Техник',
+            createdByName: 'Petar Tehnik',
             objectId: 1,
-            objectName: 'Обект Витоша'
+            objectName: 'Obekt Vitosha'
         },
         { 
             id: 2, 
             date: '2025-12-14', 
-            supplier: 'Техномаркет', 
+            supplier: 'Tehnomarket', 
             invoiceNumber: 'INV-002',
             total: 450.00,
-            description: 'Електро материали',
+            description: 'Elektro materiali',
             createdBy: 4,
-            createdByName: 'Стоян Техник',
+            createdByName: 'Stoyan Tehnik',
             objectId: 2,
-            objectName: 'Обект Люлин'
+            objectName: 'Obekt Lyulin'
         },
         { 
             id: 3, 
             date: '2025-12-13', 
-            supplier: 'Практикер', 
+            supplier: 'Praktiker', 
             invoiceNumber: 'INV-003',
             total: 890.50,
-            description: 'ВиК материали',
+            description: 'ViK materiali',
             createdBy: 3,
-            createdByName: 'Петър Техник',
+            createdByName: 'Petar Tehnik',
             objectId: 1,
-            objectName: 'Обект Витоша'
+            objectName: 'Obekt Vitosha'
         }
     ],
 
@@ -65,19 +65,19 @@ const DEMO_DATA = {
     inventory: [
         { 
             id: 1, 
-            name: 'Бормашина Bosch', 
-            category: 'Електроинструменти',
+            name: 'Bormashina Bosch', 
+            category: 'Elektroinstrumenti',
             status: 'in-use',
             assignedTo: 3,
-            assignedToName: 'Петър Техник',
+            assignedToName: 'Petar Tehnik',
             objectId: 1,
-            objectName: 'Обект Витоша',
+            objectName: 'Obekt Vitosha',
             photos: []
         },
         { 
             id: 2, 
-            name: 'Ъглошлайф Makita', 
-            category: 'Електроинструменти',
+            name: 'Agloshlaif Makita', 
+            category: 'Elektroinstrumenti',
             status: 'available',
             assignedTo: null,
             assignedToName: null,
@@ -87,19 +87,19 @@ const DEMO_DATA = {
         },
         { 
             id: 3, 
-            name: 'Стълба алуминиева 3м', 
-            category: 'Оборудване',
+            name: 'Stalba aluminieva 3m', 
+            category: 'Oborudvane',
             status: 'in-use',
             assignedTo: 4,
-            assignedToName: 'Стоян Техник',
+            assignedToName: 'Stoyan Tehnik',
             objectId: 2,
-            objectName: 'Обект Люлин',
+            objectName: 'Obekt Lyulin',
             photos: []
         },
         { 
             id: 4, 
-            name: 'Комплект ръчни инструменти', 
-            category: 'Ръчни инструменти',
+            name: 'Komplekt rachni instrumenti', 
+            category: 'Rachni instrumenti',
             status: 'available',
             assignedTo: null,
             assignedToName: null,
@@ -111,20 +111,11 @@ const DEMO_DATA = {
 
     // Transactions
     transactions: [
-        { id: 1, type: 'cash_funding', userId: 3, amount: 3000, date: '2025-12-10', description: 'Захранване с пари в брой', createdBy: 1 },
-        { id: 2, type: 'expense', userId: 3, amount: -500, date: '2025-12-12', description: 'Разход по фактура INV-001', invoiceId: 1 },
-        { id: 3, type: 'bank_transfer', userId: 4, amount: 2000, date: '2025-12-11', description: 'Банков превод', createdBy: 1 },
-        { id: 4, type: 'expense', userId: 4, amount: -200, date: '2025-12-13', description: 'Разход по фактура INV-002', invoiceId: 2 }
+        { id: 1, type: 'cash_funding', userId: 3, amount: 3000, date: '2025-12-10', description: 'Zahranvane s pari v broi', createdBy: 1 },
+        { id: 2, type: 'expense', userId: 3, amount: -500, date: '2025-12-12', description: 'Razhod po faktura INV-001', invoiceId: 1 },
+        { id: 3, type: 'bank_transfer', userId: 4, amount: 2000, date: '2025-12-11', description: 'Bankov prevod', createdBy: 1 },
+        { id: 4, type: 'expense', userId: 4, amount: -200, date: '2025-12-13', description: 'Razhod po faktura INV-002', invoiceId: 2 }
     ],
-
-    // Overview stats
-    overview: {
-        totalBalance: 7500.50,
-        totalExpenses: 80800,
-        activeObjects: 3,
-        totalTools: 4,
-        recentExpenses: []
-    },
 
     // Helper methods
     getUserById(id) {
@@ -145,9 +136,3 @@ const DEMO_DATA = {
         return items.length > 0 ? Math.max(...items.map(i => i.id)) + 1 : 1;
     }
 };
-
-// Make overview include recent expenses
-DEMO_DATA.overview.recentExpenses = DEMO_DATA.invoices.slice(0, 5);
-
-// Freeze to prevent accidental modifications
-Object.freeze(DEMO_DATA.overview);
