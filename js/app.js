@@ -21,33 +21,39 @@ const App = {
      * Initialize application
      */
     async init() {
-        console.log('Initializing BARIN ALP...');
-        
-        // Initialize components
-        Components.toast.init();
-        Components.modal.init();
-        
-        // Register Service Worker
-        this.registerServiceWorker();
-        
-        // Populate login users (demo mode or from API)
-        await this.populateLoginUsers();
-        
-        // Check authentication
-        const isLoggedIn = await Auth.init();
-        
-        if (isLoggedIn) {
-            this.showApp();
-            this.navigateTo('dashboard');
-        } else {
-            this.showLogin();
-        }
-        
-        // Setup event listeners
-        this.setupEventListeners();
-        
-        // Hide loading screen
-        this.hideLoading();
+        try {
+            console.log('Initializing BARIN ALP...');
+            
+            // Initialize components
+            Components.toast.init();
+            Components.modal.init();
+            
+            // Register Service Worker
+            this.registerServiceWorker();
+            
+            // Populate login users (demo mode or from API)
+            await this.populateLoginUsers();
+            
+            // Check authentication
+            const isLoggedIn = await Auth.init();
+            
+            if (isLoggedIn) {
+                this.showApp();
+                this.navigateTo('dashboard');
+            } else {
+                this.showLogin();
+            }
+            
+            // Setup event listeners
+            this.setupEventListeners();
+            
+            // Hide loading screen
+            this.hideLoading();
+        } catch (error) {
+            console.error('App init error:', error);
+            // Show error and hide loading
+            document.getElementById('loading-screen').innerHTML = '<p style="color:red;">Error: ' + error.message + '</p>';
+        };
     },
 
     /**
