@@ -312,16 +312,19 @@ const App = {
         
         // Update header title
         const titles = {
-            'dashboard': 'Табло',
-            'new-expense': 'Нов разход',
-            'invoices': 'Фактури',
-            'inventory': 'Инвентар',
-            'admin-overview': 'Общ преглед',
-            'technicians': 'Техници',
-            'bank-upload': 'Банково извлечение',
-            'objects': 'Обекти'
+            'dashboard': 'Inicio',
+            'new-expense': 'Nov razhod',
+            'invoices': 'Fakturi',
+            'inventory': 'Inventar',
+            'admin-overview': 'Pregled',
+            'technicians': 'Tehnici',
+            'bank-upload': 'Bank izvlechenie',
+            'objects': 'Obekti'
         };
-        Utils.$('#header-title').textContent = titles[pageName] || 'БАРИН АЛП';
+        const headerTitle = Utils.$('.header-title');
+        if (headerTitle) {
+            headerTitle.textContent = titles[pageName] || 'BARIN ALP';
+        }
     },
 
     /**
