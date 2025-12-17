@@ -160,7 +160,223 @@
 
         <!-- Main Content Area -->
         <main id="main-content" class="main-content">
-            <!-- Pages will be loaded here dynamically -->
+            
+            <!-- Dashboard Page -->
+            <section id="page-dashboard" class="page">
+                <div class="page-header">
+                    <h2>Начало</h2>
+                </div>
+                <div id="dashboard-content" class="page-content">
+                    <!-- Dashboard content loaded dynamically -->
+                </div>
+            </section>
+
+            <!-- New Expense Page -->
+            <section id="page-new-expense" class="page hidden">
+                <div class="page-header">
+                    <h2>Нов разход</h2>
+                </div>
+                <div class="page-content">
+                    <form id="expense-form" class="expense-form">
+                        <div class="form-group">
+                            <label for="expense-date">Дата</label>
+                            <input type="date" id="expense-date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expense-supplier">Доставчик</label>
+                            <input type="text" id="expense-supplier" placeholder="Име на доставчик" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expense-invoice-number">№ на фактура</label>
+                            <input type="text" id="expense-invoice-number" placeholder="Номер на фактура">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expense-total">Обща сума (лв.)</label>
+                            <input type="number" id="expense-total" step="0.01" min="0" placeholder="0.00" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="expense-description">Описание</label>
+                            <textarea id="expense-description" rows="2" placeholder="Допълнително описание"></textarea>
+                        </div>
+
+                        <!-- Allocation Section -->
+                        <div class="allocation-section">
+                            <div class="allocation-header">
+                                <h3>Разпределение по обекти</h3>
+                                <div class="allocation-mode-toggle">
+                                    <button type="button" class="btn btn-sm" data-mode="single" id="btn-single-object">Един обект</button>
+                                    <button type="button" class="btn btn-sm btn-outline" data-mode="split" id="btn-split-objects">Разпределение</button>
+                                </div>
+                            </div>
+
+                            <!-- Single Object Mode -->
+                            <div id="single-object-allocation" class="allocation-mode">
+                                <div class="form-group">
+                                    <label for="expense-object">Обект</label>
+                                    <select id="expense-object">
+                                        <option value="">Изберете обект</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Split Allocation Mode -->
+                            <div id="split-allocation" class="allocation-mode hidden">
+                                <div id="positions-list" class="positions-list">
+                                    <!-- Position rows added dynamically -->
+                                </div>
+                                <button type="button" id="btn-add-position" class="btn btn-outline btn-sm btn-block">
+                                    + Добави позиция
+                                </button>
+                                <div class="allocation-summary">
+                                    <span>Разпределено: <strong id="allocated-total">0.00 лв.</strong></span>
+                                    <span>Остатък: <strong id="remaining-total">0.00 лв.</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Запази разход</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Invoices List Page -->
+            <section id="page-invoices" class="page hidden">
+                <div class="page-header">
+                    <h2>Фактури</h2>
+                    <div class="page-actions">
+                        <button id="btn-filter-invoices" class="btn-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="page-content">
+                    <!-- Filters -->
+                    <div id="invoices-filters" class="filters-panel hidden">
+                        <div class="form-group">
+                            <label>Период</label>
+                            <div class="date-range">
+                                <input type="date" id="filter-date-from">
+                                <span>до</span>
+                                <input type="date" id="filter-date-to">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Обект</label>
+                            <select id="filter-object">
+                                <option value="">Всички</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Техник</label>
+                            <select id="filter-technician">
+                                <option value="">Всички</option>
+                            </select>
+                        </div>
+                        <button id="btn-apply-filters" class="btn btn-primary btn-block">Приложи</button>
+                    </div>
+                    
+                    <div id="invoices-list" class="invoices-list">
+                        <!-- Invoice items loaded dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inventory Page -->
+            <section id="page-inventory" class="page hidden">
+                <div class="page-header">
+                    <h2>Инвентар</h2>
+                    <div class="page-actions">
+                        <button id="btn-add-tool" class="btn btn-primary btn-sm">+ Нов</button>
+                    </div>
+                </div>
+                <div class="page-content">
+                    <!-- Filter tabs -->
+                    <div class="tab-bar">
+                        <button class="tab-btn active" data-filter="all">Всички</button>
+                        <button class="tab-btn" data-filter="available">Налични</button>
+                        <button class="tab-btn" data-filter="in-use">В употреба</button>
+                    </div>
+                    
+                    <div id="inventory-list" class="inventory-list">
+                        <!-- Tool items loaded dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Admin Overview Page (Directors Only) -->
+            <section id="page-admin-overview" class="page hidden">
+                <div class="page-header">
+                    <h2>Преглед</h2>
+                </div>
+                <div class="page-content">
+                    <div id="overview-stats" class="stats-grid">
+                        <!-- Stats cards loaded dynamically -->
+                    </div>
+                    <div id="objects-summary" class="section">
+                        <h3>Обекти</h3>
+                        <div id="objects-list-summary"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Technicians Page (Directors Only) -->
+            <section id="page-technicians" class="page hidden">
+                <div class="page-header">
+                    <h2>Техници</h2>
+                </div>
+                <div class="page-content">
+                    <div id="technicians-list" class="technicians-list">
+                        <!-- Technician cards loaded dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Bank Upload Page (Directors Only) -->
+            <section id="page-bank-upload" class="page hidden">
+                <div class="page-header">
+                    <h2>Банково извлечение</h2>
+                </div>
+                <div class="page-content">
+                    <div class="upload-area" id="bank-upload-area">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                        <p>Качете PDF от Asset Bank</p>
+                        <input type="file" id="bank-file-input" accept=".pdf" hidden>
+                        <button type="button" class="btn btn-primary" id="btn-select-bank-file">Избери файл</button>
+                    </div>
+                    
+                    <div id="parsed-transactions" class="hidden">
+                        <h3>Намерени транзакции</h3>
+                        <div id="transactions-preview"></div>
+                        <button type="button" class="btn btn-primary btn-block" id="btn-import-transactions">Импортирай избраните</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Objects Management Page (Directors Only) -->
+            <section id="page-objects" class="page hidden">
+                <div class="page-header">
+                    <h2>Обекти</h2>
+                    <div class="page-actions">
+                        <button id="btn-add-object" class="btn btn-primary btn-sm">+ Нов</button>
+                    </div>
+                </div>
+                <div class="page-content">
+                    <div id="objects-list" class="objects-list">
+                        <!-- Object items loaded dynamically -->
+                    </div>
+                </div>
+            </section>
+
         </main>
 
         <!-- Bottom Navigation (Mobile) -->
@@ -206,6 +422,7 @@
 
     <!-- Scripts -->
     <script src="js/config.js"></script>
+    <script src="js/demo-data.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/utils.js"></script>
