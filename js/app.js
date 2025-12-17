@@ -30,6 +30,9 @@ const App = {
         // Register Service Worker
         this.registerServiceWorker();
         
+        // Populate login users (demo mode or from API)
+        await this.populateLoginUsers();
+        
         // Check authentication
         const isLoggedIn = await Auth.init();
         
@@ -48,12 +51,44 @@ const App = {
     },
 
     /**
+     * Populate login user select
+     */
+    async populateLoginUsers() {
+        const userSelect = Utils.$('#user-select');
+        if (!userSelect) return;
+
+        // DEMO MODE - use demo users
+        if (CONFIG.API_BASE_URL.includes('your-n8n-instance')) {
+            Object.entries(Auth.DEMO_USERS).forEach(([username, user]) => {
+                const option = document.createElement('option');
+                option.value = username;
+                option.textContent = user.name;
+                userSelect.appendChild(option);
+            });
+            return;
+        }
+
+        // Real API - fetch users list
+        try {
+            const users = await API.getUsers();
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user.username;
+                option.textContent = user.name;
+                userSelect.appendChild(option);
+            });
+        } catch (error) {
+            console.warn('Could not load users:', error);
+        }
+    },
+
+    /**
      * Register Service Worker
      */
     async registerServiceWorker() {
         if ('serviceWorker' in navigator) {
             try {
-                const registration = await navigator.serviceWorker.register('/sw.js');
+                const registration = await navigator.serviceWorker.register('./sw.js');
                 console.log('Service Worker registered:', registration.scope);
             } catch (error) {
                 console.warn('Service Worker registration failed:', error);
@@ -112,12 +147,14 @@ const App = {
         e.preventDefault();
         
         const form = e.target;
-        const username = form.username.value.trim();
-        const password = form.password.value;
-        const submitBtn = form.querySelector('button[type="submit"]');
+        const userSelect = Utils.$('#user-select');
+        const pinInput = Utils.$('#pin-input');
+        const username = userSelect?.value;
+        const password = pinInput?.value;
+        const submitBtn = form.querySelector('button[type=\"submit\"]');
         
         if (!username || !password) {
-            Components.toast.error('Моля въведете потребител и парола');
+            Components.toast.error('Моля изберете потребител и въведете PIN');
             return;
         }
         
@@ -163,7 +200,7 @@ const App = {
     showLogin() {
         Utils.hide('#app');
         Utils.show('#login-screen');
-        Utils.$('#username')?.focus();
+        Utils.$('#user-select')?.focus();
     },
 
     /**
@@ -175,9 +212,14 @@ const App = {
         
         // Update user info in header and menu
         const user = Auth.getUser();
-        Utils.$('#header-user-name').textContent = Auth.getDisplayName();
-        Utils.$('#menu-user-name').textContent = Auth.getDisplayName();
-        Utils.$('#menu-user-role').textContent = Auth.getRoleDisplayName();
+        const displayName = Auth.getDisplayName();
+        const roleName = Auth.getRoleDisplayName();
+        
+        const userNameEl = Utils.$('#user-name');
+        if (userNameEl) userNameEl.textContent = displayName;
+        
+        const menuRoleEl = Utils.$('#menu-user-role');
+        if (menuRoleEl) menuRoleEl.textContent = roleName;
         
         // Show/hide menu items based on role
         this.updateMenuVisibility();

@@ -14,20 +14,29 @@ const Auth = {
     async init() {
         const session = this.getSession();
         
-        if (session) {
-            // Verify session is still valid
-            try {
-                const userData = await API.verifyToken();
-                this.currentUser = userData;
-                return true;
-            } catch (error) {
-                // Session invalid, clear it
-                this.clearSession();
-                return false;
-            }
+        if (session && session.expiresAt > Date.now()) {
+            // Session exists and not expired - use it without API call
+            this.currentUser = {
+                id: session.userId,
+                username: session.username,
+                role: session.role,
+                name: session.name
+            };
+            return true;
         }
         
+        // No valid session
+        this.clearSession();
         return false;
+    },
+
+    // Demo users for testing (remove in production)
+    DEMO_USERS: {
+        'director1': { id: 1, username: 'director1', name: 'Георги Директор', role: 'director', pin: '1234' },
+        'director2': { id: 2, username: 'director2', name: 'Иван Директор', role: 'director', pin: '1234' },
+        'tech1': { id: 3, username: 'tech1', name: 'Петър Техник', role: 'technician', pin: '1234' },
+        'tech2': { id: 4, username: 'tech2', name: 'Стоян Техник', role: 'technician', pin: '1234' },
+        'tech3': { id: 5, username: 'tech3', name: 'Димитър Техник', role: 'technician', pin: '1234' }
     },
 
     /**
@@ -37,6 +46,31 @@ const Auth = {
      * @returns {Promise<Object>} User data
      */
     async login(username, password) {
+        // DEMO MODE - remove when backend is ready
+        if (CONFIG.API_BASE_URL.includes('your-n8n-instance')) {
+            const demoUser = this.DEMO_USERS[username];
+            if (!demoUser) {
+                throw new Error('Невалиден потребител');
+            }
+            if (demoUser.pin !== password) {
+                throw new Error('Грешен PIN код');
+            }
+            
+            // Save session
+            this.saveSession({
+                token: 'demo-token-' + Date.now(),
+                userId: demoUser.id,
+                username: demoUser.username,
+                role: demoUser.role,
+                name: demoUser.name,
+                expiresAt: Date.now() + CONFIG.SESSION.TIMEOUT
+            });
+            
+            this.currentUser = demoUser;
+            return demoUser;
+        }
+
+        // Real API login
         try {
             const response = await API.login(username, password);
             
