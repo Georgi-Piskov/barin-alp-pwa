@@ -1,0 +1,193 @@
+{
+  "name": "BARIN ALP - Invoices CRUD",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "invoices",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-get-invoices",
+      "name": "GET Invoices",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 200],
+      "webhookId": "get-invoices"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "invoices",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-post-invoice",
+      "name": "POST Invoice",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "webhookId": "post-invoice"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Invoices",
+          "mode": "list"
+        }
+      },
+      "id": "sheets-get-invoices",
+      "name": "Read Invoices",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Invoices",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.body.id }}",
+            "date": "={{ $json.body.date }}",
+            "supplier": "={{ $json.body.supplier }}",
+            "invoiceNumber": "={{ $json.body.invoiceNumber }}",
+            "total": "={{ $json.body.total }}",
+            "description": "={{ $json.body.description }}",
+            "createdBy": "={{ $json.body.createdBy }}",
+            "createdByName": "={{ $json.body.createdByName }}",
+            "objectId": "={{ $json.body.objectId }}",
+            "objectName": "={{ $json.body.objectName }}"
+          }
+        }
+      },
+      "id": "sheets-append-invoice",
+      "name": "Append Invoice",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $input.all().map(item => ({\n  id: parseInt(item.json.id),\n  date: item.json.date,\n  supplier: item.json.supplier,\n  invoiceNumber: item.json.invoiceNumber,\n  total: parseFloat(item.json.total) || 0,\n  description: item.json.description,\n  createdBy: parseInt(item.json.createdBy),\n  createdByName: item.json.createdByName,\n  objectId: parseInt(item.json.objectId),\n  objectName: item.json.objectName\n})) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-get-invoices",
+      "name": "Respond Invoices List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, invoice: $('POST Invoice').first().json.body } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-post-invoice",
+      "name": "Respond Invoice Created",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 500]
+    }
+  ],
+  "connections": {
+    "GET Invoices": {
+      "main": [
+        [
+          {
+            "node": "Read Invoices",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST Invoice": {
+      "main": [
+        [
+          {
+            "node": "Append Invoice",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Invoices": {
+      "main": [
+        [
+          {
+            "node": "Respond Invoices List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Invoice": {
+      "main": [
+        [
+          {
+            "node": "Respond Invoice Created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

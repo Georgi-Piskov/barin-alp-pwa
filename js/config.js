@@ -8,8 +8,8 @@ const CONFIG = {
     APP_NAME: 'БАРИН АЛП',
     APP_VERSION: '1.0.0',
     
-    // API Base URL - n8n webhook URL (replace with actual)
-    API_BASE_URL: 'https://your-n8n-instance.com/webhook',
+    // API Base URL - n8n webhook URL
+    API_BASE_URL: 'https://n8n.simeontsvetanovn8nworkflows.site/webhook',
     
     // API Endpoints
     ENDPOINTS: {

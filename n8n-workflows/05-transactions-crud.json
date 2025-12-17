@@ -1,0 +1,244 @@
+{
+  "name": "BARIN ALP - Transactions CRUD",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "transactions",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-get-transactions",
+      "name": "GET Transactions",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 200],
+      "webhookId": "get-transactions"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "transactions",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-post-transaction",
+      "name": "POST Transaction",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "webhookId": "post-transaction"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Transactions",
+          "mode": "list"
+        }
+      },
+      "id": "sheets-get-transactions",
+      "name": "Read Transactions",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Transactions",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.body.id }}",
+            "type": "={{ $json.body.type }}",
+            "userId": "={{ $json.body.userId }}",
+            "userName": "={{ $json.body.userName }}",
+            "amount": "={{ $json.body.amount }}",
+            "date": "={{ $json.body.date }}",
+            "description": "={{ $json.body.description }}",
+            "createdBy": "={{ $json.body.createdBy }}"
+          }
+        }
+      },
+      "id": "sheets-append-transaction",
+      "name": "Append Transaction",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Users",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.body.userId }}",
+            "balance": "={{ $json.body.newBalance }}"
+          }
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED",
+          "dataLocationOnSheet": {
+            "values": {
+              "lookupColumn": "id",
+              "lookupValue": "={{ $json.body.userId }}"
+            }
+          }
+        }
+      },
+      "id": "sheets-update-balance",
+      "name": "Update User Balance",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [690, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $input.all().map(item => ({\n  id: parseInt(item.json.id),\n  type: item.json.type,\n  userId: parseInt(item.json.userId),\n  userName: item.json.userName,\n  amount: parseFloat(item.json.amount),\n  date: item.json.date,\n  description: item.json.description,\n  createdBy: parseInt(item.json.createdBy)\n})) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-get-transactions",
+      "name": "Respond Transactions List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, transaction: $('POST Transaction').first().json.body } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-post-transaction",
+      "name": "Respond Transaction Created",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [910, 500]
+    }
+  ],
+  "connections": {
+    "GET Transactions": {
+      "main": [
+        [
+          {
+            "node": "Read Transactions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST Transaction": {
+      "main": [
+        [
+          {
+            "node": "Append Transaction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Transactions": {
+      "main": [
+        [
+          {
+            "node": "Respond Transactions List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Transaction": {
+      "main": [
+        [
+          {
+            "node": "Update User Balance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update User Balance": {
+      "main": [
+        [
+          {
+            "node": "Respond Transaction Created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

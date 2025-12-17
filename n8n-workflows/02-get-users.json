@@ -1,0 +1,94 @@
+{
+  "name": "BARIN ALP - Get Users",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "users",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-users",
+      "name": "Webhook Users",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "get-users"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Users",
+          "mode": "list"
+        }
+      },
+      "id": "sheets-users",
+      "name": "Get Users Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $input.all().map(item => ({\n  id: parseInt(item.json.id),\n  username: item.json.username,\n  name: item.json.name,\n  role: item.json.role,\n  balance: parseFloat(item.json.balance) || 0\n})) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-users",
+      "name": "Respond Users",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Users": {
+      "main": [
+        [
+          {
+            "node": "Get Users Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Users Sheet": {
+      "main": [
+        [
+          {
+            "node": "Respond Users",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

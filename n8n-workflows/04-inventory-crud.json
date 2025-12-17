@@ -1,0 +1,296 @@
+{
+  "name": "BARIN ALP - Inventory CRUD",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "inventory",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-get-inventory",
+      "name": "GET Inventory",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 200],
+      "webhookId": "get-inventory"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "inventory",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-post-tool",
+      "name": "POST Tool",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "webhookId": "post-inventory"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "inventory/transfer",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-transfer",
+      "name": "Transfer Tool",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 800],
+      "webhookId": "transfer-tool"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Inventory",
+          "mode": "list"
+        }
+      },
+      "id": "sheets-get-inventory",
+      "name": "Read Inventory",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Inventory",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.body.id }}",
+            "name": "={{ $json.body.name }}",
+            "category": "={{ $json.body.category }}",
+            "status": "={{ $json.body.status }}",
+            "assignedTo": "={{ $json.body.assignedTo }}",
+            "assignedToName": "={{ $json.body.assignedToName }}",
+            "objectId": "={{ $json.body.objectId }}",
+            "objectName": "={{ $json.body.objectName }}",
+            "photos": "={{ JSON.stringify($json.body.photos || []) }}"
+          }
+        }
+      },
+      "id": "sheets-append-tool",
+      "name": "Append Tool",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Inventory",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.body.toolId }}",
+            "status": "={{ $json.body.newStatus }}",
+            "assignedTo": "={{ $json.body.newAssignedTo }}",
+            "assignedToName": "={{ $json.body.newAssignedToName }}",
+            "objectId": "={{ $json.body.newObjectId }}",
+            "objectName": "={{ $json.body.newObjectName }}"
+          }
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED",
+          "dataLocationOnSheet": {
+            "values": {
+              "lookupColumn": "id",
+              "lookupValue": "={{ $json.body.toolId }}"
+            }
+          }
+        }
+      },
+      "id": "sheets-update-tool",
+      "name": "Update Tool",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 800],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $input.all().map(item => ({\n  id: parseInt(item.json.id),\n  name: item.json.name,\n  category: item.json.category,\n  status: item.json.status,\n  assignedTo: item.json.assignedTo ? parseInt(item.json.assignedTo) : null,\n  assignedToName: item.json.assignedToName || null,\n  objectId: item.json.objectId ? parseInt(item.json.objectId) : null,\n  objectName: item.json.objectName || null,\n  photos: item.json.photos ? JSON.parse(item.json.photos) : []\n})) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-get-inventory",
+      "name": "Respond Inventory List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, tool: $('POST Tool').first().json.body } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-post-tool",
+      "name": "Respond Tool Created",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Tool transferred successfully' } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-transfer",
+      "name": "Respond Transfer",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 800]
+    }
+  ],
+  "connections": {
+    "GET Inventory": {
+      "main": [
+        [
+          {
+            "node": "Read Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST Tool": {
+      "main": [
+        [
+          {
+            "node": "Append Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transfer Tool": {
+      "main": [
+        [
+          {
+            "node": "Update Tool",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Inventory": {
+      "main": [
+        [
+          {
+            "node": "Respond Inventory List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Tool": {
+      "main": [
+        [
+          {
+            "node": "Respond Tool Created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Tool": {
+      "main": [
+        [
+          {
+            "node": "Respond Transfer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

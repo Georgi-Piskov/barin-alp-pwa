@@ -1,0 +1,288 @@
+{
+  "name": "BARIN ALP - Objects CRUD",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "objects",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-get-objects",
+      "name": "GET Objects",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 200],
+      "webhookId": "get-objects"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "objects",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-post-object",
+      "name": "POST Object",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 500],
+      "webhookId": "post-object"
+    },
+    {
+      "parameters": {
+        "httpMethod": "PUT",
+        "path": "objects/update-expenses",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "id": "webhook-update-expenses",
+      "name": "Update Expenses",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 800],
+      "webhookId": "update-object-expenses"
+    },
+    {
+      "parameters": {
+        "operation": "read",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Objects",
+          "mode": "list"
+        }
+      },
+      "id": "sheets-get-objects",
+      "name": "Read Objects",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Objects",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.body.id }}",
+            "name": "={{ $json.body.name }}",
+            "address": "={{ $json.body.address }}",
+            "status": "={{ $json.body.status }}",
+            "totalExpenses": "={{ $json.body.totalExpenses || 0 }}"
+          }
+        }
+      },
+      "id": "sheets-append-object",
+      "name": "Append Object",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Mvg9vxzp7LyYwNor0i8o8LvqYiF0ID4WD3Af58zkVTo",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Objects",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.body.objectId }}",
+            "totalExpenses": "={{ $json.body.newTotalExpenses }}"
+          }
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED",
+          "dataLocationOnSheet": {
+            "values": {
+              "lookupColumn": "id",
+              "lookupValue": "={{ $json.body.objectId }}"
+            }
+          }
+        }
+      },
+      "id": "sheets-update-expenses",
+      "name": "Update Object Expenses",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [470, 800],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $input.all().map(item => ({\n  id: parseInt(item.json.id),\n  name: item.json.name,\n  address: item.json.address,\n  status: item.json.status,\n  totalExpenses: parseFloat(item.json.totalExpenses) || 0\n})) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-get-objects",
+      "name": "Respond Objects List",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, object: $('POST Object').first().json.body } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-post-object",
+      "name": "Respond Object Created",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 500]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Expenses updated' } }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "respond-update-expenses",
+      "name": "Respond Expenses Updated",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [690, 800]
+    }
+  ],
+  "connections": {
+    "GET Objects": {
+      "main": [
+        [
+          {
+            "node": "Read Objects",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST Object": {
+      "main": [
+        [
+          {
+            "node": "Append Object",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Expenses": {
+      "main": [
+        [
+          {
+            "node": "Update Object Expenses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Objects": {
+      "main": [
+        [
+          {
+            "node": "Respond Objects List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append Object": {
+      "main": [
+        [
+          {
+            "node": "Respond Object Created",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Object Expenses": {
+      "main": [
+        [
+          {
+            "node": "Respond Expenses Updated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
